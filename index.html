@@ -2,767 +2,721 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Abakaliki Lifestyle</title>
 
 <style>
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    margin: 0;
-    overflow: hidden;
-    font-family: Arial, sans-serif;
-    background: #111827;
-    color: white;
-    touch-action: none;
-}
-
-#game {
-    position: fixed;
-    inset: 0;
+  margin: 0;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background: #87ceeb;
+  touch-action: none;
 }
 
 canvas {
-    display: block;
+  display: block;
 }
 
-#topbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    pointer-events: none;
-    background: linear-gradient(
-        to bottom,
-        rgba(0,0,0,0.65),
-        transparent
-    );
+#hud {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  z-index: 5;
+  pointer-events: none;
 }
 
-.logo {
-    font-size: 17px;
-    font-weight: 900;
-    color: #facc15;
+.panel {
+  color: white;
+  background: rgba(0,0,0,.75);
+  padding: 10px 13px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.7;
 }
 
-.subtitle {
-    font-size: 10px;
-    margin-top: 4px;
-    letter-spacing: 1px;
-}
-
-.money {
-    background: #166534;
-    padding: 9px 12px;
-    border-radius: 10px;
-    font-weight: bold;
-    border: 1px solid #4ade80;
-}
-
-#location {
-    position: fixed;
-    top: 88px;
-    left: 15px;
-    background: rgba(0,0,0,0.6);
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-}
-
-#message {
-    position: fixed;
-    top: 130px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.75);
-    border: 1px solid #facc15;
-    border-radius: 10px;
-    padding: 10px 15px;
-    font-size: 12px;
-    text-align: center;
-    width: max-content;
-    max-width: 90%;
+#title {
+  font-weight: bold;
+  color: #ffd700;
+  font-size: 15px;
 }
 
 #controls {
-    position: fixed;
-    bottom: 25px;
-    left: 20px;
-    width: 140px;
-    height: 140px;
-}
-
-#joystick {
-    width: 140px;
-    height: 140px;
-    background: rgba(255,255,255,0.12);
-    border: 2px solid rgba(255,255,255,0.4);
-    border-radius: 50%;
-    position: relative;
-    touch-action: none;
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
 }
 
 #stick {
-    position: absolute;
-    width: 55px;
-    height: 55px;
-    background: rgba(250,204,21,0.85);
-    border: 2px solid white;
-    border-radius: 50%;
-    left: 40px;
-    top: 40px;
-    pointer-events: none;
+  position: absolute;
+  left: 25px;
+  bottom: 35px;
+  width: 125px;
+  height: 125px;
+  border-radius: 50%;
+  background: rgba(0,0,0,.30);
+  border: 2px solid rgba(255,255,255,.7);
+  pointer-events: auto;
+  touch-action: none;
 }
 
-#actions {
-    position: fixed;
-    bottom: 35px;
-    right: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+#knob {
+  position: absolute;
+  left: 37px;
+  top: 37px;
+  width: 47px;
+  height: 47px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.85);
+  box-shadow: 0 2px 8px #222;
 }
 
-.action {
-    width: 82px;
-    height: 55px;
-    border-radius: 14px;
-    border: 2px solid white;
-    color: white;
-    background: rgba(0,0,0,0.65);
-    font-weight: bold;
-    font-size: 12px;
-    touch-action: manipulation;
+.btn {
+  position: absolute;
+  pointer-events: auto;
+  border: 2px solid rgba(255,255,255,.8);
+  border-radius: 50%;
+  color: white;
+  font-weight: bold;
+  background: rgba(0,0,0,.65);
+  width: 67px;
+  height: 67px;
+  font-size: 11px;
+  touch-action: none;
 }
 
-#interact {
-    background: #b45309;
+#action {
+  right: 25px;
+  bottom: 38px;
+  background: #087f23;
 }
 
-#help {
-    position: fixed;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 10px;
-    white-space: nowrap;
-    color: #fff;
-    opacity: 0.8;
+#brake {
+  right: 103px;
+  bottom: 116px;
+  background: #b71c1c;
 }
 
-#loading {
-    position: fixed;
-    inset: 0;
-    z-index: 10;
-    background: #111827;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 25px;
+#camera {
+  right: 20px;
+  top: 95px;
+  width: 85px;
+  height: 43px;
+  border-radius: 10px;
+  background: #164e9b;
 }
 
-#loading h2 {
-    color: #facc15;
+#enter {
+  right: 20px;
+  top: 145px;
+  width: 85px;
+  height: 43px;
+  border-radius: 10px;
+  background: #a45b00;
+}
+
+#message {
+  position: fixed;
+  left: 50%;
+  top: 48%;
+  transform: translate(-50%,-50%);
+  padding: 12px 16px;
+  color: white;
+  background: rgba(0,0,0,.8);
+  border-radius: 10px;
+  font-size: 14px;
+  z-index: 10;
+  display: none;
+  text-align: center;
 }
 
 @media (max-width: 380px) {
-    #controls {
-        width: 115px;
-        height: 115px;
-    }
+  #stick {
+    width: 108px;
+    height: 108px;
+  }
 
-    #joystick {
-        width: 115px;
-        height: 115px;
-    }
-
-    #stick {
-        left: 30px;
-        top: 30px;
-    }
-
-    #actions {
-        right: 10px;
-    }
-
-    .action {
-        width: 70px;
-    }
+  #knob {
+    left: 30px;
+    top: 30px;
+  }
 }
 </style>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
 </head>
 
 <body>
 
-<div id="game"></div>
+<div id="hud">
+  <div class="panel">
+    <div id="title">ABAKALIKI LIFESTYLE</div>
+    <div id="mode">Mode: Walking</div>
+    <div id="money">Money: ₦1,000</div>
+    <div id="speed">Speed: 0 km/h</div>
+  </div>
 
-<div id="loading">
-    <div>
-        <h2>ABAKALIKI LIFESTYLE 🇳🇬</h2>
-        <p>Building your city...</p>
-        <small>Please wait for the 3D world to load.</small>
-    </div>
+  <div class="panel">
+    OPEN WORLD<br>
+    <span style="color:#8effa1">Explore the city</span>
+  </div>
 </div>
-
-<div id="topbar">
-    <div>
-        <div class="logo">ABAKALIKI LIFESTYLE</div>
-        <div class="subtitle">YOUR CITY. YOUR LIFE. YOUR STORY.</div>
-    </div>
-
-    <div class="money">₦<span id="cash">50000</span></div>
-</div>
-
-<div id="location">📍 Abakaliki City</div>
-
-<div id="message">Welcome to Abakaliki! Explore your city.</div>
 
 <div id="controls">
-    <div id="joystick">
-        <div id="stick"></div>
-    </div>
+  <div id="stick">
+    <div id="knob"></div>
+  </div>
+
+  <button class="btn" id="action">ACTION</button>
+  <button class="btn" id="brake">BRAKE</button>
+  <button class="btn" id="camera">CAMERA</button>
+  <button class="btn" id="enter">ENTER CAR</button>
 </div>
 
-<div id="actions">
-    <button class="action" id="run">🏃 RUN</button>
-    <button class="action" id="interact">👋 ACTION</button>
-</div>
-
-<div id="help">Move with the joystick • Explore the city</div>
-
-<script type="importmap">
-{
-    "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.module.js"
-    }
-}
-</script>
+<div id="message"></div>
 
 <script type="module">
-import * as THREE from "three";
-
-const container = document.getElementById("game");
-const message = document.getElementById("message");
-const loading = document.getElementById("loading");
+import * as THREE from 'three';
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x87ceeb);
-scene.fog = new THREE.Fog(0x87ceeb, 45, 150);
+scene.background = new THREE.Color(0x91d5ff);
+scene.fog = new THREE.Fog(0x91d5ff, 100, 350);
 
 const camera = new THREE.PerspectiveCamera(
-    65,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    300
+  70, window.innerWidth / window.innerHeight, 0.1, 1000
 );
 
 const renderer = new THREE.WebGLRenderer({
-    antialias: false,
-    powerPreference: "high-performance"
+  antialias: true,
+  powerPreference: 'high-performance'
 });
 
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(
-    Math.min(window.devicePixelRatio, 1.5)
-);
-
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+renderer.shadowMap.enabled = false;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
-container.appendChild(renderer.domElement);
+document.body.appendChild(renderer.domElement);
 
-// LIGHTING
-
-scene.add(new THREE.HemisphereLight(0xffffff, 0x53634c, 2));
+scene.add(new THREE.HemisphereLight(0xffffff, 0x667755, 2));
 
 const sunlight = new THREE.DirectionalLight(0xffffff, 2);
-sunlight.position.set(30, 60, 20);
+sunlight.position.set(40, 80, 30);
 scene.add(sunlight);
 
-// MATERIALS
+const material = (color, roughness = 0.9) =>
+  new THREE.MeshStandardMaterial({ color, roughness });
 
-function material(color) {
-    return new THREE.MeshStandardMaterial({ color });
-}
-
-const grassMat = material(0x6b9b50);
-const roadMat = material(0x34383d);
-const pavementMat = material(0xc6c2b5);
-const whiteMat = material(0xffffff);
-
-// GROUND
+const grassMat = material(0x48a447);
+const roadMat = material(0x333840);
+const lineMat = material(0xffffff);
+const sidewalkMat = material(0xb9b9b9);
 
 const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(220, 220),
-    grassMat
+  new THREE.PlaneGeometry(700, 700),
+  grassMat
 );
-
 ground.rotation.x = -Math.PI / 2;
 ground.position.y = -0.12;
 scene.add(ground);
 
-// ROADS
-
-function road(x, z, width, depth) {
-    const mesh = new THREE.Mesh(
-        new THREE.BoxGeometry(width, 0.12, depth),
-        roadMat
-    );
-
-    mesh.position.set(x, 0, z);
-    scene.add(mesh);
+function box(w,h,d,color,x,y,z,parent=scene) {
+  const mesh = new THREE.Mesh(
+    new THREE.BoxGeometry(w,h,d),
+    material(color)
+  );
+  mesh.position.set(x,y,z);
+  parent.add(mesh);
+  return mesh;
 }
 
-road(0, 0, 220, 13);
-road(0, 0, 13, 220);
-road(0, 42, 220, 9);
-road(42, 0, 9, 220);
-road(-42, 0, 9, 220);
-road(0, -42, 220, 9);
+// City roads
+box(16,0.1,650,0x333840,0,0,0);
+box(650,0.1,16,0x333840,0,0,0);
 
-// ROAD MARKINGS
-
-function roadLine(x, z, width, depth) {
-    const line = new THREE.Mesh(
-        new THREE.BoxGeometry(width, 0.035, depth),
-        whiteMat
-    );
-
-    line.position.set(x, 0.075, z);
-    scene.add(line);
+// Road lane markings
+for (let i=-300; i<300; i+=18) {
+  box(0.22,0.03,7,0xffdf64,0,0.07,i);
+  box(7,0.03,0.22,0xffffff,i,0.07,0);
 }
 
-for (let i = -100; i <= 100; i += 12) {
-    roadLine(i, 0, 5, 0.16);
-    roadLine(0, i, 0.16, 5);
-}
+// Sidewalks
+box(4,0.25,650,0xb9b9b9,-10,0,0);
+box(4,0.25,650,0xb9b9b9,10,0,0);
+box(650,0.25,4,0xb9b9b9,0,0,-10);
+box(650,0.25,4,0xb9b9b9,0,0,10);
 
-// BUILDINGS
-
-const buildings = [];
-
+// Buildings
 const buildingColors = [
-    0xe8d5b7,
-    0xf1e7d0,
-    0xd9e2e8,
-    0xd8c3a5,
-    0xe5c5bd,
-    0xb8d5c8,
-    0xf0d68a,
-    0xd5d5d5
+  0xe9d6b5, 0xf2eee5, 0xe6ad79,
+  0xc8d8e8, 0xd7c5a5, 0xd9e5ce,
+  0xc4c4c4, 0xf0c8bc
 ];
 
-function createBuilding(x, z, w, h, d, index) {
-    const group = new THREE.Group();
+function building(x,z) {
+  const w = 8 + Math.random()*9;
+  const d = 8 + Math.random()*9;
+  const h = 7 + Math.random()*24;
+  const color = buildingColors[
+    Math.floor(Math.random()*buildingColors.length)
+  ];
 
-    const body = new THREE.Mesh(
-        new THREE.BoxGeometry(w, h, d),
-        material(buildingColors[index % buildingColors.length])
-    );
+  box(w,h,d,color,x,h/2,z);
 
-    body.position.y = h / 2;
-    group.add(body);
+  // Roof
+  box(w+0.3,0.35,d+0.3,0x777777,x,h+0.15,z);
 
-    const roof = new THREE.Mesh(
-        new THREE.BoxGeometry(w + 0.4, 0.4, d + 0.4),
-        material(0x777777)
-    );
+  // Windows on front
+  const windowMat = material(0x8ed8f4,0.35);
 
-    roof.position.y = h + 0.2;
-    group.add(roof);
-
-    // Front door
-
-    const door = new THREE.Mesh(
-        new THREE.BoxGeometry(1.1, 2.2, 0.12),
-        material(0x69452e)
-    );
-
-    door.position.set(0, 1.1, d / 2 + 0.07);
-    group.add(door);
-
-    // Windows
-
-    const windowMat = material(0x4c9bbd);
-
-    for (let y = 3; y < h - 1; y += 3) {
-        for (let xx = -w / 2 + 1.5; xx < w / 2; xx += 3) {
-            const win = new THREE.Mesh(
-                new THREE.BoxGeometry(1.1, 1.2, 0.1),
-                windowMat
-            );
-
-            win.position.set(xx, y, d / 2 + 0.07);
-            group.add(win);
-        }
+  for(let yy=2; yy<h-1; yy+=3) {
+    for(let xx=-w/2+1.2; xx<w/2-0.5; xx+=2.4) {
+      const win = new THREE.Mesh(
+        new THREE.BoxGeometry(1.1,1.3,0.08),
+        windowMat
+      );
+      win.position.set(x+xx,yy,z+d/2+0.05);
+      scene.add(win);
     }
+  }
 
-    group.position.set(x, 0, z);
-    scene.add(group);
-
-    buildings.push({
-        x,
-        z,
-        w,
-        d,
-        name: "City Building"
-    });
-
-    return group;
+  // Shop sign
+  if(Math.random() > 0.45) {
+    box(w*0.75,1.1,0.18,0x1459a8,x,h*0.25,z+d/2+0.12);
+  }
 }
 
-let buildingIndex = 0;
-
-for (let x = -90; x <= 90; x += 23) {
-    for (let z = -90; z <= 90; z += 23) {
-
-        if (Math.abs(x) < 15 || Math.abs(z) < 15) {
-            continue;
-        }
-
-        if (
-            Math.abs(x - 42) < 12 ||
-            Math.abs(x + 42) < 12
-        ) {
-            continue;
-        }
-
-        const w = 9 + (buildingIndex % 3);
-        const d = 9 + ((buildingIndex + 1) % 3);
-        const h = 7 + (buildingIndex % 4) * 2;
-
-        createBuilding(x, z, w, h, d, buildingIndex);
-
-        buildingIndex++;
-    }
+// Keep the roads clear
+for(let x=-70; x<=70; x+=24) {
+  for(let z=-70; z<=70; z+=24) {
+    if(Math.abs(x)<18 || Math.abs(z)<18) continue;
+    building(x,z);
+  }
 }
 
-// TREES
-
-function createTree(x, z) {
-    const tree = new THREE.Group();
-
-    const trunk = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.3, 0.45, 2.5, 6),
-        material(0x79502b)
-    );
-
-    trunk.position.y = 1.25;
-    tree.add(trunk);
-
-    const leaves = new THREE.Mesh(
-        new THREE.SphereGeometry(1.8, 7, 6),
-        material(0x26733b)
-    );
-
-    leaves.position.y = 3.5;
-    tree.add(leaves);
-
-    tree.position.set(x, 0, z);
-    scene.add(tree);
+for(let x=-170; x<=170; x+=28) {
+  for(let z=-170; z<=170; z+=28) {
+    if(Math.abs(x)<90 && Math.abs(z)<90) continue;
+    if(Math.random()>0.28) building(x,z);
+  }
 }
 
-for (let x = -90; x <= 90; x += 15) {
-    for (let z = -90; z <= 90; z += 15) {
-        if (
-            Math.abs(x) > 12 &&
-            Math.abs(z) > 12 &&
-            Math.abs(x) < 100 &&
-            Math.abs(z) < 100 &&
-            Math.abs(x - 42) > 8 &&
-            Math.abs(x + 42) > 8
-        ) {
-            if ((Math.abs(x + z) % 3) === 0) {
-                createTree(x, z);
-            }
-        }
-    }
+// Trees
+function tree(x,z) {
+  box(0.7,3,0.7,0x79512e,x,1.5,z);
+
+  const crown = new THREE.Mesh(
+    new THREE.SphereGeometry(2.1,7,6),
+    material(0x237c35)
+  );
+  crown.position.set(x,4,z);
+  scene.add(crown);
 }
 
-// PLAYER
+for(let x=-160; x<=160; x+=20) {
+  tree(x,-14);
+  tree(x,14);
+  tree(-14,x);
+  tree(14,x);
+}
 
+// Human placeholder
+// Replace this with a proper rigged human model in a later upgrade.
 const player = new THREE.Group();
+scene.add(player);
 
-const skin = material(0x8d5524);
-const shirt = material(0x1769aa);
-const trousers = material(0x222c3c);
+const skin = material(0x8d5738);
+const shirt = material(0x1763b0);
+const trousers = material(0x252b35);
 const shoes = material(0x171717);
 
 const body = new THREE.Mesh(
-    new THREE.BoxGeometry(0.9, 1.2, 0.55),
-    shirt
+  new THREE.CylinderGeometry(0.38,0.48,1.25,8),
+  shirt
 );
-
-body.position.y = 1.8;
+body.position.y=1.55;
 player.add(body);
 
 const head = new THREE.Mesh(
-    new THREE.SphereGeometry(0.38, 10, 8),
-    skin
+  new THREE.SphereGeometry(0.34,12,10),
+  skin
 );
-
-head.position.y = 2.65;
+head.position.y=2.45;
 player.add(head);
 
 const legs = [];
 
-for (const side of [-1, 1]) {
-    const leg = new THREE.Mesh(
-        new THREE.BoxGeometry(0.32, 0.9, 0.38),
-        trousers
-    );
+for(let side of [-1,1]) {
+  const leg = new THREE.Mesh(
+    new THREE.BoxGeometry(0.27,0.85,0.32),
+    trousers
+  );
+  leg.position.set(side*0.2,0.48,0);
+  player.add(leg);
+  legs.push(leg);
 
-    leg.position.set(side * 0.23, 0.85, 0);
-    player.add(leg);
-    legs.push(leg);
-
-    const shoe = new THREE.Mesh(
-        new THREE.BoxGeometry(0.34, 0.18, 0.48),
-        shoes
-    );
-
-    shoe.position.set(side * 0.23, 0.32, -0.05);
-    player.add(shoe);
+  const foot = new THREE.Mesh(
+    new THREE.BoxGeometry(0.3,0.16,0.43),
+    shoes
+  );
+  foot.position.set(side*0.2,0.09,-0.04);
+  player.add(foot);
 }
 
-player.position.set(0, 0, 5);
-scene.add(player);
+player.position.set(0,0,5);
 
-// MOVEMENT
+// Drivable car
+const car = new THREE.Group();
+scene.add(car);
+car.position.set(5,0,0);
 
-let moveX = 0;
-let moveY = 0;
-let running = false;
-let animationTime = 0;
-
-const joystick = document.getElementById("joystick");
-const stick = document.getElementById("stick");
-
-let activePointer = null;
-
-function updateJoystick(event) {
-    const rect = joystick.getBoundingClientRect();
-
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-
-    let dx = event.clientX - cx;
-    let dy = event.clientY - cy;
-
-    const max = rect.width * 0.30;
-    const length = Math.hypot(dx, dy);
-
-    if (length > max) {
-        dx = dx / length * max;
-        dy = dy / length * max;
-    }
-
-    moveX = dx / max;
-    moveY = dy / max;
-
-    stick.style.left =
-        (rect.width / 2 + dx - 27.5) + "px";
-
-    stick.style.top =
-        (rect.height / 2 + dy - 27.5) + "px";
-}
-
-function resetJoystick() {
-    activePointer = null;
-    moveX = 0;
-    moveY = 0;
-
-    stick.style.left =
-        (joystick.clientWidth / 2 - 27.5) + "px";
-
-    stick.style.top =
-        (joystick.clientHeight / 2 - 27.5) + "px";
-}
-
-joystick.addEventListener("pointerdown", event => {
-    event.preventDefault();
-
-    activePointer = event.pointerId;
-    joystick.setPointerCapture(event.pointerId);
-
-    updateJoystick(event);
-});
-
-joystick.addEventListener("pointermove", event => {
-    if (event.pointerId === activePointer) {
-        updateJoystick(event);
-    }
-});
-
-joystick.addEventListener("pointerup", resetJoystick);
-joystick.addEventListener("pointercancel", resetJoystick);
-
-document.getElementById("run").addEventListener("pointerdown", () => {
-    running = true;
-});
-
-document.getElementById("run").addEventListener("pointerup", () => {
-    running = false;
-});
-
-document.getElementById("run").addEventListener("pointercancel", () => {
-    running = false;
-});
-
-document.getElementById("run").addEventListener("pointerleave", () => {
-    running = false;
-});
-
-// KEYBOARD SUPPORT
-
-const keys = {};
-
-window.addEventListener("keydown", event => {
-    keys[event.key.toLowerCase()] = true;
-});
-
-window.addEventListener("keyup", event => {
-    keys[event.key.toLowerCase()] = false;
-});
-
-// ACTION BUTTON
-
-let cash = 50000;
-
-document.getElementById("interact").addEventListener("click", () => {
-    let nearest = null;
-    let distance = Infinity;
-
-    for (const building of buildings) {
-        const d = Math.hypot(
-            player.position.x - building.x,
-            player.position.z - building.z
-        );
-
-        if (d < distance) {
-            distance = d;
-            nearest = building;
-        }
-    }
-
-    if (nearest && distance < 12) {
-        message.textContent =
-            "🏠 You are near a building! More activities coming soon.";
-    } else {
-        message.textContent =
-            "👋 Welcome to Abakaliki! Explore the city and discover new places.";
-    }
-
-    cash += 100;
-    document.getElementById("cash").textContent =
-        cash.toLocaleString("en-NG");
-
-    setTimeout(() => {
-        message.textContent = "Explore Abakaliki and build your lifestyle!";
-    }, 3500);
-});
-
-// CAMERA
-
-const cameraOffset = new THREE.Vector3(0, 8, 12);
-
-camera.position.set(
-    player.position.x,
-    player.position.y + 8,
-    player.position.z + 12
+const carBody = new THREE.Mesh(
+  new THREE.BoxGeometry(2.3,0.75,4.3),
+  material(0xd52222,0.35)
 );
+carBody.position.y=0.75;
+car.add(carBody);
 
-camera.lookAt(player.position);
+const cabin = new THREE.Mesh(
+  new THREE.BoxGeometry(1.65,0.8,2),
+  material(0x252d38,0.3)
+);
+cabin.position.set(0,1.45,-0.25);
+car.add(cabin);
 
-// GAME LOOP
+// Windscreen
+const glass = material(0x80c9e8,0.25);
+const windscreen = new THREE.Mesh(
+  new THREE.BoxGeometry(1.5,0.55,0.08),
+  glass
+);
+windscreen.position.set(0,1.48,0.78);
+car.add(windscreen);
 
-function animate() {
-    requestAnimationFrame(animate);
-
-    let x = moveX;
-    let z = moveY;
-
-    if (keys["w"] || keys["arrowup"]) z -= 1;
-    if (keys["s"] || keys["arrowdown"]) z += 1;
-    if (keys["a"] || keys["arrowleft"]) x -= 1;
-    if (keys["d"] || keys["arrowright"]) x += 1;
-
-    const length = Math.hypot(x, z);
-
-    if (length > 1) {
-        x /= length;
-        z /= length;
-    }
-
-    const moving = Math.hypot(x, z) > 0.08;
-    const speed = running ? 0.18 : 0.09;
-
-    if (moving) {
-        player.position.x += x * speed;
-        player.position.z += z * speed;
-
-        player.rotation.y = Math.atan2(x, z);
-
-        animationTime += 0.18;
-
-        legs[0].rotation.x = Math.sin(animationTime) * 0.45;
-        legs[1].rotation.x = -Math.sin(animationTime) * 0.45;
-    } else {
-        legs[0].rotation.x = 0;
-        legs[1].rotation.x = 0;
-    }
-
-    // Keep the player inside the city
-
-    player.position.x = THREE.MathUtils.clamp(
-        player.position.x, -105, 105
-    );
-
-    player.position.z = THREE.MathUtils.clamp(
-        player.position.z, -105, 105
-    );
-
-    // Follow player with camera
-
-    const targetCamera = new THREE.Vector3(
-        player.position.x,
-        player.position.y + 7,
-        player.position.z + 10
-    );
-
-    camera.position.lerp(targetCamera, 0.12);
-
-    camera.lookAt(
-        player.position.x,
-        player.position.y + 1,
-        player.position.z
-    );
-
-    renderer.render(scene, camera);
+// Headlights and rear lights
+for(const side of [-1,1]) {
+  box(0.45,0.22,0.08,0xffffd0,side*0.72,0.78,2.17,car);
+  box(0.4,0.22,0.08,0xff2222,side*0.72,0.78,-2.17,car);
 }
 
-window.addEventListener("resize", () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
+// Wheels
+const wheels=[];
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
+for(const x of [-1.15,1.15]) {
+  for(const z of [-1.35,1.35]) {
+    const wheel = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.43,0.43,0.28,12),
+      material(0x171717)
+    );
+    wheel.rotation.z=Math.PI/2;
+    wheel.position.set(x,0.43,z);
+    car.add(wheel);
+    wheels.push(wheel);
+  }
+}
+
+// Game state
+let money = 1000;
+let driving = false;
+let firstPerson = false;
+let carSpeed = 0;
+let heading = 0;
+let walkHeading = 0;
+let joyX = 0;
+let joyY = 0;
+let brakePressed = false;
+let actionPressed = false;
+let walkTime = 0;
+
+const modeText = document.getElementById('mode');
+const moneyText = document.getElementById('money');
+const speedText = document.getElementById('speed');
+const message = document.getElementById('message');
+
+function notify(text) {
+  message.textContent=text;
+  message.style.display='block';
+  clearTimeout(notify.timer);
+  notify.timer=setTimeout(()=>{
+    message.style.display='none';
+  },2200);
+}
+
+// Mobile joystick
+const stick=document.getElementById('stick');
+const knob=document.getElementById('knob');
+let stickPointer=null;
+
+function moveStick(e) {
+  const r=stick.getBoundingClientRect();
+  const cx=r.left+r.width/2;
+  const cy=r.top+r.height/2;
+  let dx=e.clientX-cx;
+  let dy=e.clientY-cy;
+  const max=r.width*0.32;
+  const len=Math.hypot(dx,dy);
+
+  if(len>max) {
+    dx=dx/len*max;
+    dy=dy/len*max;
+  }
+
+  joyX=dx/max;
+  joyY=dy/max;
+
+  knob.style.transform=`translate(${dx}px,${dy}px)`;
+}
+
+stick.addEventListener('pointerdown',e=>{
+  stickPointer=e.pointerId;
+  stick.setPointerCapture(e.pointerId);
+  moveStick(e);
 });
 
-animate();
+stick.addEventListener('pointermove',e=>{
+  if(e.pointerId===stickPointer) moveStick(e);
+});
 
-loading.style.display = "none";
+function resetStick() {
+  stickPointer=null;
+  joyX=0;
+  joyY=0;
+  knob.style.transform='translate(0px,0px)';
+}
 
-message.textContent =
-    "Welcome to Abakaliki! Use the joystick to move.";
+stick.addEventListener('pointerup',resetStick);
+stick.addEventListener('pointercancel',resetStick);
 
+// Enter and exit car
+document.getElementById('enter').addEventListener('click',()=>{
+  if(!driving) {
+    const distance=player.position.distanceTo(car.position);
+
+    if(distance<7) {
+      driving=true;
+      player.visible=false;
+      carSpeed=0;
+      notify('You entered the car!');
+    } else {
+      notify('Walk closer to the red car first.');
+    }
+  } else {
+    driving=false;
+    carSpeed=0;
+
+    player.visible=true;
+    player.position.set(
+      car.position.x+Math.cos(heading)*3,
+      0,
+      car.position.z+Math.sin(heading)*3
+    );
+
+    notify('You exited the car.');
+  }
+
+  updateHUD();
+});
+
+// Switch driving camera
+document.getElementById('camera').addEventListener('click',()=>{
+  firstPerson=!firstPerson;
+  notify(firstPerson?'First-person camera':'Third-person camera');
+});
+
+// Action button
+document.getElementById('action').addEventListener('pointerdown',()=>{
+  actionPressed=true;
+});
+
+document.getElementById('action').addEventListener('pointerup',()=>{
+  actionPressed=false;
+});
+
+document.getElementById('action').addEventListener('pointercancel',()=>{
+  actionPressed=false;
+});
+
+// Brake button
+document.getElementById('brake').addEventListener('pointerdown',()=>{
+  brakePressed=true;
+});
+
+document.getElementById('brake').addEventListener('pointerup',()=>{
+  brakePressed=false;
+});
+
+document.getElementById('brake').addEventListener('pointercancel',()=>{
+  brakePressed=false;
+});
+
+function updateHUD() {
+  modeText.textContent=driving?'Mode: Driving':'Mode: Walking';
+  document.getElementById('enter').textContent=
+    driving?'EXIT CAR':'ENTER CAR';
+  document.getElementById('camera').style.display=
+    driving?'block':'none';
+  speedText.textContent=
+    'Speed: '+Math.round(Math.abs(carSpeed)*18)+' km/h';
+  moneyText.textContent='Money: ₦'+money.toLocaleString('en-NG');
+}
+
+let actionCooldown=0;
+
+function updateGame(dt) {
+  if(driving) {
+    const throttle=-joyY;
+    const steering=joyX;
+
+    if(throttle>0.12) {
+      carSpeed+=throttle*12*dt;
+    } else if(throttle<-0.12) {
+      carSpeed+=throttle*7*dt;
+    } else {
+      carSpeed*=Math.pow(0.985,dt*60);
+    }
+
+    if(brakePressed) {
+      carSpeed*=Math.pow(0.90,dt*60);
+    }
+
+    carSpeed=THREE.MathUtils.clamp(carSpeed,-8,23);
+
+    heading+=steering*carSpeed*0.055*dt;
+
+    car.position.x+=Math.sin(heading)*carSpeed*dt;
+    car.position.z+=Math.cos(heading)*carSpeed*dt;
+
+    car.rotation.y=heading;
+
+    wheels.forEach(w=>{
+      w.rotation.x+=carSpeed*dt;
+    });
+
+    // Simple city boundary
+    car.position.x=THREE.MathUtils.clamp(car.position.x,-300,300);
+    car.position.z=THREE.MathUtils.clamp(car.position.z,-300,300);
+
+  } else {
+    const forward=-joyY;
+    const sideways=joyX;
+
+    if(Math.abs(forward)>0.08 || Math.abs(sideways)>0.08) {
+      walkHeading=Math.atan2(sideways,forward);
+      player.rotation.y=walkHeading;
+
+      const speed=forward*7*dt;
+
+      player.position.x+=Math.sin(walkHeading)*speed;
+      player.position.z+=Math.cos(walkHeading)*speed;
+
+      walkTime+=dt*12;
+
+      legs[0].rotation.x=Math.sin(walkTime)*0.55;
+      legs[1].rotation.x=-Math.sin(walkTime)*0.55;
+    } else {
+      legs.forEach(l=>l.rotation.x*=0.8);
+    }
+
+    player.position.x=THREE.MathUtils.clamp(player.position.x,-300,300);
+    player.position.z=THREE.MathUtils.clamp(player.position.z,-300,300);
+  }
+
+  if(actionPressed && actionCooldown<=0) {
+    money+=100;
+    actionCooldown=0.6;
+    notify('You earned ₦100!');
+  }
+
+  actionCooldown-=dt;
+  updateHUD();
+}
+
+const desiredCamera=new THREE.Vector3();
+const lookTarget=new THREE.Vector3();
+
+function updateCamera() {
+  if(driving) {
+    if(firstPerson) {
+      desiredCamera.set(
+        car.position.x+Math.sin(heading)*0.2,
+        car.position.y+1.85,
+        car.position.z+Math.cos(heading)*0.2
+      );
+
+      lookTarget.set(
+        car.position.x+Math.sin(heading)*15,
+        1.7,
+        car.position.z+Math.cos(heading)*15
+      );
+    } else {
+      desiredCamera.set(
+        car.position.x-Math.sin(heading)*9,
+        car.position.y+5.5,
+        car.position.z-Math.cos(heading)*9
+      );
+
+      lookTarget.set(
+        car.position.x,
+        car.position.y+1,
+        car.position.z
+      );
+    }
+  } else {
+    desiredCamera.set(
+      player.position.x-Math.sin(player.rotation.y)*7,
+      4.5,
+      player.position.z-Math.cos(player.rotation.y)*7
+    );
+
+    lookTarget.set(
+      player.position.x,
+      1.5,
+      player.position.z
+    );
+  }
+
+  camera.position.lerp(desiredCamera,0.12);
+  camera.lookAt(lookTarget);
+}
+
+let previous=performance.now();
+
+function animate(now) {
+  requestAnimationFrame(animate);
+
+  const dt=Math.min((now-previous)/1000,0.04);
+  previous=now;
+
+  updateGame(dt);
+  updateCamera();
+  renderer.render(scene,camera);
+}
+
+camera.position.set(0,6,12);
+updateHUD();
+notify('Walk to the red car and tap ENTER CAR.');
+requestAnimationFrame(animate);
+
+window.addEventListener('resize',()=>{
+  camera.aspect=window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight);
+});
 </script>
-
 </body>
-</html>
+    </html>
